@@ -28,12 +28,9 @@ The system consists of several modular services:
 
 ### Prerequisites
 
-1. **Python 3.8+**
-2. **Rapid OCR**:
-- Ubuntu/Debian: `sudo apt-get install rapid-ocr`
-- macOS: `brew install rapid-ocr`
-- Windows: Download from [GitHub](https://github.com/RapidAI/RapidOCR)
-3. **OpenAI API Key** (for structured data extraction)
+1. **Python 3.10+**
+2. **RapidOCR**: installed automatically with the Python dependencies (`rapidocr-onnxruntime` in `requirements.txt`); no system package is needed
+3. **Google Gemini API key** from [Google AI Studio](https://aistudio.google.com/) (for structured data extraction)
 
 ### Setup
 
@@ -144,24 +141,10 @@ The system includes comprehensive error handling:
 
 ### Docker Deployment
 
-Create a `Dockerfile`:
+The repository includes a `Dockerfile` and `docker-compose.yml`. Put `GEMINI_API_KEY` in `.env`, then run:
 
-```dockerfile
-FROM python:3.9-slim
-
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    rapid-ocr \
-    && rm -rf /var/lib/apt/lists/*
-
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-
-COPY . .
-
-EXPOSE 8000
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+```bash
+docker compose up --build
 ```
 
 ### Production Considerations
@@ -182,7 +165,7 @@ Once running, visit `http://localhost:8000/docs` for interactive API documentati
 ### Common Issues
 
 1. **RapidOCR not found**:
-   - Ensure Rapid is installed
+   - Reinstall dependencies: `pip install -r requirements.txt`
 
 2. **GOOGLE API errors**:
    - Verify API key is valid
